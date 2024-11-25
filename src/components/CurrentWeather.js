@@ -10,17 +10,15 @@ const CurrentWeather = () => {
   // Загрузка данных о текущей погоде
   useEffect(() => {
     const loadWeather = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchCurrentWeather();
-        setWeather(data);
-        setIsLoading(false);
-      } catch (err) {
-        setError("Не удалось загрузить данные о погоде.");
-        setIsLoading(false);
-      }
+      const data = await fetchCurrentWeather("Moscow");
+      setWeather({
+        temperature: data.main.temp,
+        description: data.weather[0].description,
+        wind_speed: data.wind.speed,
+        humidity: data.main.humidity,
+        pressure: data.main.pressure,
+      });
     };
-
     loadWeather();
   }, []);
 

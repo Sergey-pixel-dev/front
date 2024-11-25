@@ -9,17 +9,14 @@ const WeatherStats = () => {
 
   useEffect(() => {
     const loadStats = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchWeatherStats(); // Запрос данных с сервера
-        setStats(data);
-        setIsLoading(false);
-      } catch (err) {
-        setError("Не удалось загрузить статистику.");
-        setIsLoading(false);
-      }
+      const data = await fetchWeatherStats("Moscow");
+      setStats({
+        max_temperature: data.daily[0].temp.max,
+        min_temperature: data.daily[0].temp.min,
+        average_humidity: data.daily[0].humidity,
+        pressure: data.daily[0].pressure,
+      });
     };
-
     loadStats();
   }, []);
 

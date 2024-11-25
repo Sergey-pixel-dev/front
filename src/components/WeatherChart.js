@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { fetchWeatherStats } from "../services/api"; // API-запрос для получения данных
+import { fetchWeatherChart } from "../services/api"; // API-запрос для получения данных
 import "../styles/WeatherChart.css";
 
 const WeatherChart = () => {
@@ -10,17 +10,17 @@ const WeatherChart = () => {
 
   useEffect(() => {
     const loadChartData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchWeatherStats();
-        setChartData(formatChartData(data));
-        setIsLoading(false);
-      } catch (err) {
-        setError("Не удалось загрузить данные для графиков.");
-        setIsLoading(false);
-      }
+      const data = await fetchWeatherChart("Moscow");
+      setChartData({
+        labels: data.list.map((item) => item.dt_txt),
+        datasets: [
+          {
+            label: "Температура",
+            data: data.list.map((item) => item.main.temp),
+          },
+        ],
+      });
     };
-
     loadChartData();
   }, []);
 

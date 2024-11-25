@@ -32,9 +32,9 @@ const Header = ({ onToggleTheme }) => {
     const fetchLocation = async () => {
       try {
         // В реальном приложении данные о городе можно получить от сервера Golang
-        const response = await fetch("http://localhost:5000/location"); // Пример API
-        const data = await response.json();
-        setLocation(data.city || "Неизвестное местоположение");
+        //const response = await fetch("http://localhost:5000/location"); // Пример API
+        //const data = await response.json();
+        //setLocation(data.city || "Неизвестное местоположение");
       } catch (error) {
         setLocation("Ошибка загрузки города");
       }
