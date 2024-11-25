@@ -1,0 +1,58 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--header-bg);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.header .time-location {
+  display: flex;
+  flex-direction: column;
+}
+
+.header .time {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.header .location {
+  font-size: 14px;
+  color: var(--secondary-text);
+}
+
+.header .theme-toggle .theme-button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  font-size: 14px;
+}
+
+.header .theme-toggle .theme-button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+:root {
+  --header-bg: #1e1e1e;
+  --text: #ffffff;
+  --secondary-text: #b0b0b0;
+  --border: #333333;
+  --button-bg: #333333;
+  --button-text: #ffffff;
+  --button-hover-bg: #444444;
+}
+
+.app.light {
+  --header-bg: #f5f5f5;
+  --text: #000000;
+  --secondary-text: #555555;
+  --border: #dddddd;
+  --button-bg: #e0e0e0;
+  --button-text: #000000;
+  --button-hover-bg: #d0d0d0;
+}

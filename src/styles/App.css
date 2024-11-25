@@ -1,0 +1,22 @@
+.app {
+  font-family: Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.app.dark {
+  --background: #121212;
+  --text: #ffffff;
+}
+
+.app.light {
+  --background: #ffffff;
+  --text: #000000;
+}
+
+.main-content {
+  display: grid;
+  gap: 20px;
+}

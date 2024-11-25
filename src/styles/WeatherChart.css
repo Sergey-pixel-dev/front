@@ -1,0 +1,18 @@
+.weather-chart {
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: var(--text);
+}
+
+.weather-chart h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.weather-chart canvas {
+  max-width: 100%;
+  height: auto;
+}
