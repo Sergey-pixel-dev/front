@@ -6,13 +6,11 @@
     <title>Графики погоды</title>
     <link rel="stylesheet" href="css/styles.css" />
     <!-- Подключаем библиотеку Flatpickr -->
-    <!-- Подключаем стили и скрипт Flatpickr -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -35,18 +33,17 @@
       </header>
 
       <!-- Панель выбора времени -->
-      <!-- Добавляем кнопку для открытия календаря и сам элемент календаря -->
       <section id="time-selection">
-        <button id="today-btn">Сегодня</button>
-        <button id="last-24-hours-btn">Последние сутки</button>
-        <button id="custom-time-btn">Выбрать дату</button>
+        <button class="time-btn" data-mode="today">Сегодня</button>
+        <button class="time-btn" data-mode="last24">Последние сутки</button>
+        <button class="time-btn" data-mode="custom">Выбрать дату</button>
 
         <!-- Инпут для календаря -->
         <input
           type="text"
           id="calendar-input"
           style="display: none"
-          placeholder="Выберите дату"
+          placeholder="Выберите дату или диапазон"
         />
       </section>
 
