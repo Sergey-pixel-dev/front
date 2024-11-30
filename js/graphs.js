@@ -1,4 +1,4 @@
-// Скрипты для graphs.html
+// graphs.js
 
 window.addEventListener("load", function () {
   // Инициализация графиков
@@ -85,6 +85,14 @@ window.addEventListener("load", function () {
         case "last24":
           // Ваш код для "Последние сутки"
           console.log("Выбрано: Последние сутки");
+          break;
+        case "lastWeek":
+          // Ваш код для "Последняя неделя"
+          console.log("Выбрано: Последняя неделя");
+          break;
+        case "lastMonth":
+          // Ваш код для "Последний месяц"
+          console.log("Выбрано: Последний месяц");
           break;
         case "custom":
           // Уже обработано выше

@@ -17,28 +17,21 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   </head>
   <body>
-    <!-- Меню -->
-    <nav id="sidebar">
-      <div id="close-btn">&#10006;</div>
-      <ul>
-        <li><a href="index.html" id="home-link">Главная</a></li>
-        <li><a href="graphs.html" id="graphs-link">Графики</a></li>
-        <li><a href="#">Обратная связь</a></li>
-      </ul>
-    </nav>
+    <!-- Navbar Placeholder -->
+    <div id="navbar-placeholder"></div>
 
     <!-- Контент -->
     <div id="main-content">
       <header>
-        <button id="menu-btn">&#9776;</button>
         <h1>Графики погоды</h1>
-        <button id="theme-toggle">🌙</button>
       </header>
 
       <!-- Панель выбора времени -->
       <section id="time-selection">
         <button class="time-btn" data-mode="today">Сегодня</button>
         <button class="time-btn" data-mode="last24">Последние сутки</button>
+        <button class="time-btn" data-mode="lastWeek">Последняя неделя</button>
+        <button class="time-btn" data-mode="lastMonth">Последний месяц</button>
         <button class="time-btn" data-mode="custom">Выбрать дату</button>
 
         <!-- Инпут для календаря -->

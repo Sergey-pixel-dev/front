@@ -1,4 +1,4 @@
-// Скрипты для index.html
+// index.js
 
 window.addEventListener("load", function () {
   const ctxTemp = document.getElementById("temperature-graph").getContext("2d");
