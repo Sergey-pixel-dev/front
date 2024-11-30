@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
       <ul>
         <li><a href="index.html" id="home-link">Главная</a></li>
         <li><a href="graphs.html" id="graphs-link">Графики</a></li>
-        <li><a href="#">Обратная связь</a></li>
         <li id="my-account-link" style="display: none;"><a href="#">Мой аккаунт</a></li>
+        <li><a href="#">Обратная связь</a></li>
       </ul>
     </nav>
     
