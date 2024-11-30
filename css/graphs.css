@@ -1,0 +1,62 @@
+/* Специфичные для graphs.html стили */
+
+/* Панель выбора времени */
+#time-selection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 10px;
+}
+
+.time-btn {
+  padding: 10px 20px;
+  background-color: #333;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.time-btn:hover {
+  background-color: #575757;
+}
+
+body.light-theme .time-btn {
+  background-color: #555;
+  color: #fff;
+}
+
+body.light-theme .time-btn:hover {
+  background-color: #777;
+}
+
+/* Графики */
+#graphs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.graph-card {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  text-align: center;
+  margin-bottom: 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+canvas {
+  width: 100%;
+  height: 400px;
+}
+
+body.light-theme .graph-card {
+  background-color: #fff;
+  color: #333;
+}

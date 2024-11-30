@@ -1,0 +1,91 @@
+/* Специфичные для index.html стили */
+
+/* Погода */
+#weather {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.weather-card {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 30%;
+  text-align: center;
+  transition: transform 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.weather-card:hover {
+  transform: scale(1.05);
+}
+
+.weather-card h2 {
+  font-size: 18px;
+}
+
+.weather-card p {
+  font-size: 22px;
+}
+
+/* Прогноз */
+#forecast {
+  margin-top: 40px;
+}
+
+#forecast table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#forecast th,
+#forecast td {
+  border: 1px solid #555;
+  padding: 10px;
+  text-align: center;
+}
+
+#forecast th {
+  background-color: #444;
+}
+
+body.light-theme #forecast th,
+body.light-theme #forecast td {
+  border-color: #ccc;
+}
+
+body.light-theme #forecast th {
+  background-color: #ddd;
+  color: #333;
+}
+
+body.light-theme #forecast td {
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Графики */
+#graphs {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.graph-card {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 48%;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+canvas {
+  width: 100%;
+  height: 400px;
+}
+
+body.light-theme .graph-card {
+  background-color: #fff;
+  color: #333;
+}
