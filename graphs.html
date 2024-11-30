@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Графики погоды</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Подключаем библиотеку Flatpickr -->
+    <!-- Подключаем стили и скрипт Flatpickr -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Меню -->
+    <nav id="sidebar">
+      <div id="close-btn">&#10006;</div>
+      <ul>
+        <li><a href="index.html" id="home-link">Главная</a></li>
+        <li><a href="graphs.html" id="graphs-link">Графики</a></li>
+        <li><a href="#">Обратная связь</a></li>
+      </ul>
+    </nav>
+
+    <!-- Контент -->
+    <div id="main-content">
+      <header>
+        <button id="menu-btn">&#9776;</button>
+        <h1>Графики погоды</h1>
+        <button id="theme-toggle">🌙</button>
+      </header>
+
+      <!-- Панель выбора времени -->
+      <!-- Добавляем кнопку для открытия календаря и сам элемент календаря -->
+      <section id="time-selection">
+        <button id="today-btn">Сегодня</button>
+        <button id="last-24-hours-btn">Последние сутки</button>
+        <button id="custom-time-btn">Выбрать дату</button>
+
+        <!-- Инпут для календаря -->
+        <input
+          type="text"
+          id="calendar-input"
+          style="display: none"
+          placeholder="Выберите дату"
+        />
+      </section>
+
+      <!-- Графики -->
+      <section id="graphs">
+        <div class="graph-card">
+          <h3>График температуры</h3>
+          <canvas id="temperature-graph"></canvas>
+        </div>
+        <div class="graph-card">
+          <h3>График скорости ветра</h3>
+          <canvas id="wind-speed-graph"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
