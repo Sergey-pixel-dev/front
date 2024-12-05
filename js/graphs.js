@@ -86,14 +86,13 @@ window.addEventListener("load", function () {
         return response.json();
       })
       .then((data) => {
-        const labels = data.data
-          .map((entry) => new Date(entry.date).toLocaleString())
-          .reverse(); // Предполагается, что данные в обратном хронологическом порядке
+        const labels = data.data.map((entry) =>
+          new Date(entry.date).toLocaleString()
+        ); // Предполагается, что данные в прямом хронологическом порядке
 
-        const tempData = data.data.map((entry) => entry.temp).reverse();
-        const pressureData = data.data.map((entry) => entry.pressure).reverse();
-        const humidityData = data.data.map((entry) => entry.humidity).reverse();
-
+        const tempData = data.data.map((entry) => entry.temp);
+        const pressureData = data.data.map((entry) => entry.pressure);
+        const humidityData = data.data.map((entry) => entry.humidity);
         renderChart(labels, tempData, pressureData, humidityData);
       })
       .catch((error) => {
