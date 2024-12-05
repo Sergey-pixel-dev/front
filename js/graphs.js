@@ -1,44 +1,106 @@
 // graphs.js
 
 window.addEventListener("load", function () {
-  // Инициализация графиков
-  const ctxTemp = document.getElementById("temperature-graph").getContext("2d");
-  const temperatureChart = new Chart(ctxTemp, {
-    type: "line",
-    data: {
-      labels: ["05:00", "06:00", "07:00", "08:00", "09:00"],
-      datasets: [
-        {
-          label: "Температура",
-          data: [-3, -2, -1, 0, 1],
-          borderColor: "red",
-          backgroundColor: "rgba(255, 0, 0, 0.1)",
-          fill: false,
-        },
-      ],
-    },
-    options: getChartOptions(),
-  });
-  registerChart(temperatureChart);
+  const graphCanvas = document.getElementById("graph").getContext("2d");
+  let weatherChart = null;
 
-  const ctxWind = document.getElementById("wind-speed-graph").getContext("2d");
-  const windSpeedChart = new Chart(ctxWind, {
-    type: "line",
-    data: {
-      labels: ["05:00", "06:00", "07:00", "08:00", "09:00"],
-      datasets: [
-        {
-          label: "Скорость ветра",
-          data: [5, 7, 6, 8, 7],
-          borderColor: "green",
-          backgroundColor: "rgba(0, 255, 0, 0.1)",
-          fill: false,
+  // Проверка наличия ChartZoom плагина
+  if (typeof ChartZoom === "undefined") {
+    console.error(
+      "Chart.js Zoom Plugin не найден. Проверьте подключение скрипта."
+    );
+    return;
+  }
+
+  // Регистрация Chart.js Zoom Plugin
+  Chart.register(ChartZoom);
+
+  // Функция для создания или обновления графика
+  function renderChart(labels, tempData, pressureData, humidityData) {
+    if (weatherChart) {
+      weatherChart.data.labels = labels;
+      weatherChart.data.datasets[0].data = tempData;
+      weatherChart.data.datasets[1].data = pressureData;
+      weatherChart.data.datasets[2].data = humidityData;
+      weatherChart.update();
+    } else {
+      weatherChart = new Chart(graphCanvas, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Температура (°C)",
+              data: tempData,
+              borderColor: "red",
+              backgroundColor: "rgba(255, 0, 0, 0.1)",
+              fill: false,
+              yAxisID: "y",
+            },
+            {
+              label: "Давление (мм рт. ст.)",
+              data: pressureData,
+              borderColor: "blue",
+              backgroundColor: "rgba(0, 0, 255, 0.1)",
+              fill: false,
+              yAxisID: "y1",
+            },
+            {
+              label: "Влажность (%)",
+              data: humidityData,
+              borderColor: "green",
+              backgroundColor: "rgba(0, 255, 0, 0.1)",
+              fill: false,
+              yAxisID: "y",
+            },
+          ],
         },
-      ],
-    },
-    options: getChartOptions(),
-  });
-  registerChart(windSpeedChart);
+        options: getChartOptions(),
+        // Плагин уже зарегистрирован глобально, дополнительная регистрация не требуется
+      });
+    }
+  }
+
+  // Функция для получения данных и обновления графика
+  function fetchData(mode, firstDate = null, lastDate = null) {
+    let url = "http://127.0.0.1:8081";
+    if (mode === "today") {
+      url += "/data/currentday/";
+    } else {
+      // Для остальных режимов
+      const params = new URLSearchParams();
+      if (firstDate && lastDate) {
+        params.append("first_date", firstDate);
+        params.append("last_date", lastDate);
+      }
+      url += `/data/statistics?${params.toString()}`;
+    }
+
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const labels = data.data
+          .map((entry) => new Date(entry.date).toLocaleString())
+          .reverse(); // Предполагается, что данные в обратном хронологическом порядке
+
+        const tempData = data.data.map((entry) => entry.temp).reverse();
+        const pressureData = data.data.map((entry) => entry.pressure).reverse();
+        const humidityData = data.data.map((entry) => entry.humidity).reverse();
+
+        renderChart(labels, tempData, pressureData, humidityData);
+      })
+      .catch((error) => {
+        console.error("Ошибка при получении данных:", error);
+      });
+  }
+
+  // Инициализация графика по умолчанию (Сегодня)
+  fetchData("today");
 
   // Инициализация Flatpickr
   const customTimeBtn = document.querySelector('.time-btn[data-mode="custom"]');
@@ -51,7 +113,7 @@ window.addEventListener("load", function () {
 
     if (calendarInput.style.display === "inline-block" && !fp) {
       fp = flatpickr(calendarInput, {
-        mode: "range", // Позволяет выбирать одну дату или диапазон
+        mode: "range", // Позволяет выбирать диапазон дат
         dateFormat: "Y-m-d",
         onOpen: function () {
           // Применение темы при открытии календаря
@@ -65,7 +127,12 @@ window.addEventListener("load", function () {
         },
         onChange: function (selectedDates, dateStr, instance) {
           console.log(`Вы выбрали: ${dateStr}`);
-          // Дополнительные действия при выборе даты или диапазона
+          if (selectedDates.length === 2) {
+            const firstDate = formatDateTime(selectedDates[0]);
+            const lastDate = formatDateTime(selectedDates[1]);
+            fetchDataCustom(firstDate, lastDate);
+          }
+          // Если выбрана только одна дата, ничего не делаем
         },
       });
     }
@@ -79,20 +146,39 @@ window.addEventListener("load", function () {
       const mode = button.getAttribute("data-mode");
       switch (mode) {
         case "today":
-          // Ваш код для "Сегодня"
-          console.log("Выбрано: Сегодня");
+          fetchData("today");
           break;
         case "last24":
-          // Ваш код для "Последние сутки"
-          console.log("Выбрано: Последние сутки");
+          const last24End = new Date();
+          const last24Start = new Date(
+            last24End.getTime() - 24 * 60 * 60 * 1000
+          );
+          fetchData(
+            "statistics",
+            formatDateTime(last24Start),
+            formatDateTime(last24End)
+          );
           break;
         case "lastWeek":
-          // Ваш код для "Последняя неделя"
-          console.log("Выбрано: Последняя неделя");
+          const lastWeekEnd = new Date();
+          const lastWeekStart = new Date(
+            lastWeekEnd.getTime() - 7 * 24 * 60 * 60 * 1000
+          );
+          fetchData(
+            "statistics",
+            formatDateTime(lastWeekStart),
+            formatDateTime(lastWeekEnd)
+          );
           break;
         case "lastMonth":
-          // Ваш код для "Последний месяц"
-          console.log("Выбрано: Последний месяц");
+          const lastMonthEnd = new Date();
+          const lastMonthStart = new Date();
+          lastMonthStart.setMonth(lastMonthEnd.getMonth() - 1);
+          fetchData(
+            "statistics",
+            formatDateTime(lastMonthStart),
+            formatDateTime(lastMonthEnd)
+          );
           break;
         case "custom":
           // Уже обработано выше
@@ -102,46 +188,142 @@ window.addEventListener("load", function () {
       }
     });
   });
-});
 
-// Функция для общих опций графиков
-function getChartOptions() {
-  return {
-    responsive: true,
-    plugins: {
-      legend: {
-        labels: {
-          color: document.body.classList.contains("light-theme")
-            ? "#333"
-            : "#fff",
+  // Функция для обработки пользовательского выбора даты
+  function fetchDataCustom(firstDate, lastDate) {
+    fetchData("statistics", firstDate, lastDate);
+  }
+
+  // Функция для форматирования даты в "YYYY-MM-DD HH:MM:SS"
+  function formatDateTime(date) {
+    const pad = (n) => (n < 10 ? "0" + n : n);
+    return (
+      date.getFullYear() +
+      "-" +
+      pad(date.getMonth() + 1) +
+      "-" +
+      pad(date.getDate()) +
+      " " +
+      pad(date.getHours()) +
+      ":" +
+      pad(date.getMinutes()) +
+      ":" +
+      pad(date.getSeconds())
+    );
+  }
+
+  // Обработка кнопки сброса зума
+  const resetZoomBtn = document.getElementById("reset-zoom");
+  resetZoomBtn.addEventListener("click", function () {
+    if (weatherChart) {
+      weatherChart.resetZoom();
+    }
+  });
+
+  // Функция для общих опций графиков
+  function getChartOptions() {
+    return {
+      responsive: true,
+      interaction: {
+        mode: "index",
+        intersect: false,
+      },
+      stacked: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: document.body.classList.contains("light-theme")
+              ? "#333"
+              : "#fff",
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+        // Настройки для зума и панорамирования
+        zoom: {
+          pan: {
+            enabled: true,
+            mode: "x", // Панорамирование по оси X
+            modifierKey: "ctrl", // Удерживание Ctrl для панорамирования
+            // Пределы панорамирования
+            rangeMin: {
+              x: null,
+              y: null,
+            },
+            rangeMax: {
+              x: null,
+              y: null,
+            },
+          },
+          zoom: {
+            wheel: {
+              enabled: true, // Разрешить зум колесиком мыши
+              speed: 0.1, // Скорость зума
+            },
+            pinch: {
+              enabled: true, // Разрешить зум на сенсорных устройствах
+            },
+            mode: "x", // Зум по оси X
+          },
+          limits: {
+            x: { min: "original", max: "original" },
+            y: { min: "original", max: "original" },
+          },
         },
       },
-    },
-    scales: {
-      x: {
-        ticks: {
-          color: document.body.classList.contains("light-theme")
-            ? "#333"
-            : "#fff",
+      scales: {
+        x: {
+          ticks: {
+            color: document.body.classList.contains("light-theme")
+              ? "#333"
+              : "#fff",
+          },
+          grid: {
+            color: document.body.classList.contains("light-theme")
+              ? "#ccc"
+              : "#555",
+          },
         },
-        grid: {
-          color: document.body.classList.contains("light-theme")
-            ? "#ccc"
-            : "#555",
+        y: {
+          type: "linear",
+          display: true,
+          position: "left",
+          ticks: {
+            color: document.body.classList.contains("light-theme")
+              ? "#333"
+              : "#fff",
+          },
+          grid: {
+            color: document.body.classList.contains("light-theme")
+              ? "#ccc"
+              : "#555",
+          },
+          title: {
+            display: true,
+            text: "Температура / Влажность",
+            color: document.body.classList.contains("light-theme")
+              ? "#333"
+              : "#fff",
+          },
+        },
+        y1: {
+          type: "linear",
+          display: true,
+          position: "right",
+          grid: {
+            drawOnChartArea: false, // Не рисовать сетку для y1
+          },
+          ticks: {
+            color: "blue",
+          },
+          title: {
+            display: true,
+            text: "Давление",
+            color: "blue",
+          },
         },
       },
-      y: {
-        ticks: {
-          color: document.body.classList.contains("light-theme")
-            ? "#333"
-            : "#fff",
-        },
-        grid: {
-          color: document.body.classList.contains("light-theme")
-            ? "#ccc"
-            : "#555",
-        },
-      },
-    },
-  };
-}
+    };
+  }
+});

@@ -14,6 +14,8 @@
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Подключение Chart.js Zoom Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0/dist/chartjs-plugin-zoom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   </head>
   <body>
@@ -46,13 +48,11 @@
       <!-- Графики -->
       <section id="graphs">
         <div class="graph-card">
-          <h3>График температуры</h3>
-          <canvas id="temperature-graph"></canvas>
+          <h3>Графики погоды</h3>
+          <canvas id="graph"></canvas>
         </div>
-        <div class="graph-card">
-          <h3>График скорости ветра</h3>
-          <canvas id="wind-speed-graph"></canvas>
-        </div>
+        <!-- Кнопка сброса зума -->
+        <button id="reset-zoom" style="margin-top: 10px">Сбросить зум</button>
       </section>
     </div>
 
