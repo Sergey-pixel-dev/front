@@ -140,6 +140,11 @@ document.addEventListener("DOMContentLoaded", function () {
         )
           ? "#ccc"
           : "#555";
+        chart.options.scales.y.title.color = document.body.classList.contains(
+          "light-theme"
+        )
+          ? "#333"
+          : "#fff";
         chart.options.plugins.legend.labels.color =
           document.body.classList.contains("light-theme") ? "#333" : "#fff";
         chart.update();

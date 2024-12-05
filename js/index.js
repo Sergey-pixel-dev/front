@@ -28,6 +28,26 @@ function getChartOptions() {
             : "#fff",
         },
       },
+      tooltip: {
+        position: "nearest",
+        enabled: true,
+        mode: "index", // Отображает все точки на x-оси при наведении
+        intersect: false, // Tooltip отображается, когда курсор близко к данным
+        backgroundColor: "rgba(0, 0, 0, 0.7)", // Фон Tooltip
+        titleColor: "#fff", // Цвет заголовка
+        bodyColor: "#fff", // Цвет тела Tooltip
+        borderColor: "#fff", // Цвет границы Tooltip
+        borderWidth: 1, // Ширина границы Tooltip
+        cornerRadius: 4, // Радиус скругления углов Tooltip
+        padding: 10, // Внутренний отступ Tooltip
+        callbacks: {
+          // Настройка содержимого Tooltip
+          title: function (context) {
+            let title = context[0].label;
+            return `Время: ${title}`;
+          },
+        },
+      },
     },
     scales: {
       x: {

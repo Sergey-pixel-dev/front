@@ -58,6 +58,8 @@ window.addEventListener("load", function () {
         options: getChartOptions(),
         // Плагин уже зарегистрирован глобально, дополнительная регистрация не требуется
       });
+      weatherChart.update();
+      window.chartInstances.push(weatherChart);
     }
   }
 
@@ -281,31 +283,10 @@ window.addEventListener("load", function () {
               let title = context[0].label;
               return `Дата: ${title}`;
             },
-            label: function (context) {
-              let label = context.dataset.label || "";
-              if (label) {
-                label += ": ";
-              }
-              if (context.parsed.y !== null) {
-                // Форматируем число как валюту
-                label += new Intl.NumberFormat("ru-RU", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(context.parsed.y);
-              }
-              return label;
-            },
           },
         },
         // Настройки для зума и панорамирования
         zoom: zoomOptions,
-      },
-      animation: {
-        duration: 400,
-        easing: "linear",
-        y: {
-          fn: (from, to, factor) => to,
-        },
       },
       scales: {
         x: {
