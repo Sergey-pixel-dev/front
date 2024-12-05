@@ -27,12 +27,12 @@
 }
 
 body.light-theme .time-btn {
-  background-color: #555;
-  color: #fff;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 body.light-theme .time-btn:hover {
-  background-color: #777;
+  background-color: #d8d8d8;
 }
 
 /* Графики */

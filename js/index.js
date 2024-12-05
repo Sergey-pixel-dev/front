@@ -117,10 +117,16 @@ window.addEventListener("load", function () {
 
 // Функция для получения и обновления текущих данных
 async function fetchCurrentData() {
+  // Получаем элементы по ID
+  const temp = document.getElementById("temp"); // Убедитесь, что у вас есть элемент с id="temp"
+  const humidity = document.getElementById("humidity"); // Убедитесь, что у вас есть элемент с id="humidity"
+  const min_max = document.getElementById("min-max"); // Убедитесь, что у вас есть элемент с id="min_max"
+  const timeElement = document.getElementById("last-time"); // Элемент для отображения времени
   // Отображаем сообщение «Загрузка» перед началом запроса
   temp.textContent = "Загрузка...";
   humidity.textContent = "Загрузка...";
   min_max.textContent = "Загрузка...";
+  timeElement.textContent = "Загрузка..."; // Добавляем загрузку для времени
 
   try {
     const response = await fetch("http://localhost:8081/data/current/");
@@ -129,7 +135,7 @@ async function fetchCurrentData() {
     }
     const data = await response.json();
 
-    // Обновляем объект CurrentData
+    // Обновляем объект CurrentData (предполагается, что он определен где-то выше)
     CurrentData.lastDate = data.last_date;
     CurrentData.temperature = {
       current: data.main.temp,
@@ -145,11 +151,38 @@ async function fetchCurrentData() {
     temp.textContent = `${CurrentData.temperature.current}°C`;
     humidity.textContent = `${CurrentData.humidity}%`;
     min_max.textContent = `Мин: ${CurrentData.temperature.min}°C, Макс: ${CurrentData.temperature.max}°C`;
+
+    // Парсим и форматируем дату
+    const lastDateStr = CurrentData.lastDate;
+    // Заменяем пробел на 'T' для корректного парсинга
+    const isoDateStr = lastDateStr.replace(" ", "T");
+    const date = new Date(isoDateStr);
+
+    // Проверяем, корректно ли распарсилась дата
+    if (isNaN(date)) {
+      throw new Error("Некорректный формат даты");
+    }
+
+    // Форматируем дату на русском языке
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    const formattedDate = new Intl.DateTimeFormat("ru-RU", options).format(
+      date
+    );
+
+    // Обновляем элемент с id "time"
+    timeElement.textContent = `Последние данные: ${formattedDate}`;
   } catch (error) {
     console.error("Ошибка получения текущих данных:", error);
     temp.textContent = "Ошибка загрузки";
     humidity.textContent = "Ошибка загрузки";
     min_max.textContent = "Ошибка загрузки";
+    timeElement.textContent = "Ошибка загрузки"; // Обновляем время при ошибке
   }
 }
 

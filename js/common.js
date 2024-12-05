@@ -8,6 +8,13 @@ function registerChart(chart) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.remove("light-theme");
+  }
+
   // Инъекция Navbar
   const navbarPlaceholder = document.getElementById("navbar-placeholder");
   navbarPlaceholder.innerHTML = `
@@ -46,6 +53,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }, 60000);
 
+  const themeToggleBtn = document.getElementById("theme-toggle");
+  if (savedTheme === "light") {
+    themeToggleBtn.textContent = "dark";
+  } else {
+    document.body.classList.remove("light-theme");
+    themeToggleBtn.textContent = "light";
+  }
+
   // Открытие и закрытие сайдбара
   const menuBtn = document.getElementById("menu-btn");
   const sidebar = document.getElementById("sidebar");
@@ -71,13 +86,16 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Переключение темы
-  const themeToggleBtn = document.getElementById("theme-toggle");
+
   themeToggleBtn.addEventListener("click", () => {
     document.body.classList.toggle("light-theme");
+    const isLight = document.body.classList.contains("light-theme");
     const icon = themeToggleBtn;
-    icon.textContent = document.body.classList.contains("light-theme")
-      ? "🌞"
-      : "🌙";
+    icon.textContent = isLight ? "dark" : "light";
+
+    // Сохранение текущей темы в localStorage
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+
     updateFlatpickrTheme();
     updateChartsTheme();
     updateModalTheme();

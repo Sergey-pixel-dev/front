@@ -246,7 +246,6 @@ body.light-theme .graph-card {
   height: 100%; /* Полная высота */
   overflow: auto; /* Включить прокрутку при необходимости */
   background-color: rgba(0, 0, 0, 0.4); /* Чёрный с прозрачностью */
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -309,12 +308,12 @@ body.light-theme .modal-content {
 }
 
 body.light-theme .modal-content button {
-  background-color: #555;
-  color: #fff;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 body.light-theme .modal-content button:hover {
-  background-color: #777;
+  background-color: #d8d8d8;
 }
 
 /* Register Link */
@@ -363,12 +362,13 @@ body.light-theme #navbar {
   padding: 8px 16px;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 18px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 body.light-theme #navbar .auth-btn {
-  background-color: #555;
-  color: #fff;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 1);
 }
 
 #navbar .auth-btn:hover {
@@ -376,30 +376,5 @@ body.light-theme #navbar .auth-btn {
 }
 
 body.light-theme #navbar .auth-btn:hover {
-  background-color: #777;
-}
-
-/* Новые кнопки выбора времени */
-.time-btn {
-  padding: 10px 20px;
-  background-color: #333;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.time-btn:hover {
-  background-color: #575757;
-}
-
-body.light-theme .time-btn {
-  background-color: #555;
-  color: #fff;
-}
-
-body.light-theme .time-btn:hover {
-  background-color: #777;
+  background-color: #d8d8d8;
 }
