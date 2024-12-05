@@ -219,9 +219,35 @@ window.addEventListener("load", function () {
       weatherChart.resetZoom();
     }
   });
-
+  const onPanZoomStart = () => {
+    weatherChart.stop();
+  };
   // Функция для общих опций графиков
   function getChartOptions() {
+    let zoomOptions = {
+      limits: {
+        x: {
+          min: 0,
+          max: 6000,
+          minRange: 5,
+        },
+      },
+      pan: {
+        enabled: true,
+        mode: "x",
+        onPanStart: onPanZoomStart,
+      },
+      zoom: {
+        mode: "x",
+        pinch: {
+          enabled: true,
+        },
+        wheel: {
+          enabled: true,
+        },
+        onZoomStart: onPanZoomStart,
+      },
+    };
     return {
       responsive: true,
       interaction: {
@@ -238,38 +264,47 @@ window.addEventListener("load", function () {
           },
         },
         tooltip: {
+          position: "nearest",
           enabled: true,
+          mode: "index", // Отображает все точки на x-оси при наведении
+          intersect: false, // Tooltip отображается, когда курсор близко к данным
+          backgroundColor: "rgba(0, 0, 0, 0.7)", // Фон Tooltip
+          titleColor: "#fff", // Цвет заголовка
+          bodyColor: "#fff", // Цвет тела Tooltip
+          borderColor: "#fff", // Цвет границы Tooltip
+          borderWidth: 1, // Ширина границы Tooltip
+          cornerRadius: 4, // Радиус скругления углов Tooltip
+          padding: 10, // Внутренний отступ Tooltip
+          callbacks: {
+            // Настройка содержимого Tooltip
+            title: function (context) {
+              let title = context[0].label;
+              return `Дата: ${title}`;
+            },
+            label: function (context) {
+              let label = context.dataset.label || "";
+              if (label) {
+                label += ": ";
+              }
+              if (context.parsed.y !== null) {
+                // Форматируем число как валюту
+                label += new Intl.NumberFormat("ru-RU", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(context.parsed.y);
+              }
+              return label;
+            },
+          },
         },
         // Настройки для зума и панорамирования
-        zoom: {
-          pan: {
-            enabled: true,
-            mode: "x", // Панорамирование по оси X
-            modifierKey: "ctrl", // Удерживание Ctrl для панорамирования
-            // Пределы панорамирования
-            rangeMin: {
-              x: null,
-              y: null,
-            },
-            rangeMax: {
-              x: null,
-              y: null,
-            },
-          },
-          zoom: {
-            wheel: {
-              enabled: true, // Разрешить зум колесиком мыши
-              speed: 0.1, // Скорость зума
-            },
-            pinch: {
-              enabled: true, // Разрешить зум на сенсорных устройствах
-            },
-            mode: "x", // Зум по оси X
-          },
-          limits: {
-            x: { min: "original", max: "original" },
-            y: { min: "original", max: "original" },
-          },
+        zoom: zoomOptions,
+      },
+      animation: {
+        duration: 400,
+        easing: "linear",
+        y: {
+          fn: (from, to, factor) => to,
         },
       },
       scales: {
