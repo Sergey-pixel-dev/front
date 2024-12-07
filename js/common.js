@@ -376,7 +376,11 @@ document.addEventListener("DOMContentLoaded", function () {
               // Очистка формы
               registerForm.reset();
             } else {
-              alert("Ошибка при получении токена доступа.");
+              if (data.error == "already exists") {
+                alert("Уже существует аккаунт с таким email");
+              } else {
+                alert("Ошибка при получении токена доступа.");
+              }
             }
           } else {
             const errorData = await response.json();
@@ -411,8 +415,9 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userEmail");
     // Дополнительно можно удалить refresh token, отправив запрос на logout, если предусмотрено сервером
+    window.location.href = "index.html";
     updateAuthButtons();
-    alert("Вы успешно вышли из аккаунта.");
+    //alert("Вы успешно вышли из аккаунта.");
   }
 
   // Инициализация состояния кнопок аутентификации при загрузке страницы

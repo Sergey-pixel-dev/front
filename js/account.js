@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("api-key").value = data.api_key;
       } else {
         const errorData = await response.json();
-        if (errorData.error === "invalid or incorrect token") {
+        if (errorData.error === "invalid token") {
           // Пытаемся обновить токен
           const refreshSuccessful = await refreshToken();
           if (refreshSuccessful) {
@@ -37,7 +37,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             await getUserInfo();
           } else {
             alert("Пожалуйста, выполните вход в систему.");
+            localStorage.removeItem("accessToken");
+            updateAuthButtons();
             window.location.href = "index.html";
+            //
           }
         } else {
           alert(`Ошибка: ${errorData.error}`);
@@ -83,39 +86,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // Получаем информацию о пользователе
   await getUserInfo();
-
-  // Обработка формы для сохранения API ключа
-  const accountForm = document.getElementById("account-form");
-  accountForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const apiKey = document.getElementById("api-key").value;
-    if (apiKey) {
-      try {
-        const response = await fetch("http://localhost:8081/user/account/", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-          body: JSON.stringify({
-            api_key: apiKey,
-          }),
-        });
-
-        if (response.ok) {
-          alert("API ключ успешно сохранён!");
-        } else {
-          const errorData = await response.json();
-          alert(`Ошибка сохранения API ключа: ${errorData.error}`);
-        }
-      } catch (error) {
-        console.error("Ошибка при сохранении API ключа:", error);
-        alert("Произошла ошибка при сохранении API ключа.");
-      }
-    } else {
-      alert("Пожалуйста, введите API ключ.");
-    }
-  });
 });
+function updateAuthButtons() {
+  const accessToken = localStorage.getItem("accessToken");
+  const isLoggedIn = accessToken !== null;
+
+  if (isLoggedIn) {
+    authBtn.textContent = "Выйти";
+    document.getElementById("my-account-link").style.display = "block";
+  } else {
+    authBtn.textContent = "Войти";
+    document.getElementById("my-account-link").style.display = "none";
+  }
+}
