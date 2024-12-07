@@ -18,15 +18,19 @@ document.addEventListener("DOMContentLoaded", function () {
   // Инъекция Navbar
   const navbarPlaceholder = document.getElementById("navbar-placeholder");
   navbarPlaceholder.innerHTML = `
-    <nav id="sidebar">
-      <div id="close-btn">&#10006;</div>
-      <ul>
-        <li><a href="index.html" id="home-link">Главная</a></li>
-        <li><a href="graphs.html" id="graphs-link">Графики</a></li>
-        <li id="my-account-link" style="display: none;"><a href="account.html">Мой аккаунт</a></li>
-        <li><a href="#">Обратная связь</a></li>
-      </ul>
-    </nav>
+  <nav id="sidebar">
+    <div id="close-btn">&#10006;</div>
+    <ul>
+      <li><a href="index.html" id="home-link">Главная</a></li>
+      <li><a href="graphs.html" id="graphs-link">Графики</a></li>
+      <li id="my-account-link" style="display: none;"><a href="account.html">Мой аккаунт</a></li>
+      <li><a href="#">Обратная связь</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>&copy; weather-station 2024</p>
+      <p>Version 1.0.0 (06.12.2024, 06:04)</p>
+    </div>
+  </nav>
     
     <div id="navbar">
       <button id="menu-btn">&#9776;</button>
@@ -397,18 +401,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Обновление состояния кнопок аутентификации и отображение "Мой аккаунт"
-  function updateAuthButtons() {
-    const accessToken = localStorage.getItem("accessToken");
-    const isLoggedIn = accessToken !== null;
-
-    if (isLoggedIn) {
-      authBtn.textContent = "Выйти";
-      document.getElementById("my-account-link").style.display = "block";
-    } else {
-      authBtn.textContent = "Войти";
-      document.getElementById("my-account-link").style.display = "none";
-    }
-  }
 
   // Функция выхода из аккаунта
   function logout() {
@@ -422,4 +414,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Инициализация состояния кнопок аутентификации при загрузке страницы
   updateAuthButtons();
+});
+function showNotification(message, type = "info") {
+  const notificationContainer = document.getElementById(
+    "notification-container"
+  );
+
+  if (!notificationContainer) {
+    console.error("Notification container not found!");
+    return;
+  }
+
+  const notification = document.createElement("div");
+  notification.classList.add("notification", type);
+
+  // Настройка стиля уведомления в зависимости от темы
+  const isLightTheme = document.body.classList.contains("light-theme");
+  notification.classList.add(isLightTheme ? "light" : "dark");
+
+  notification.textContent = message;
+
+  notificationContainer.appendChild(notification);
+
+  // Удаление уведомления через 5 секунд
+  setTimeout(() => {
+    notification.remove();
+  }, 5000);
+}
+
+// ... остальной код ...
+
+// Делайте функции показа и скрытия модальных окон глобальными
+window.showAuthModal = function showAuthModal() {
+  const authModal = document.getElementById("auth-modal");
+  authModal.style.display = "flex";
+};
+
+window.showRegisterModal = function showRegisterModal() {
+  const registerModal = document.getElementById("register-modal");
+  registerModal.style.display = "flex";
+};
+
+window.hideAuthModal = function hideAuthModal() {
+  const authModal = document.getElementById("auth-modal");
+  authModal.style.display = "none";
+};
+
+window.hideRegisterModal = function hideRegisterModal() {
+  const registerModal = document.getElementById("register-modal");
+  registerModal.style.display = "none";
+};
+
+// Обновите функцию updateAuthButtons и сделайте ее глобальной
+window.updateAuthButtons = function updateAuthButtons() {
+  const accessToken = localStorage.getItem("accessToken");
+  const isLoggedIn = accessToken !== null;
+  const authBtn = document.getElementById("auth-btn");
+
+  if (isLoggedIn) {
+    authBtn.textContent = "Выйти";
+    document.getElementById("my-account-link").style.display = "block";
+  } else {
+    authBtn.textContent = "Войти";
+    document.getElementById("my-account-link").style.display = "none";
+  }
+};
+
+// Вызовите updateAuthButtons при загрузке страницы
+document.addEventListener("DOMContentLoaded", function () {
+  updateAuthButtons();
+  // ... остальной код ...
 });

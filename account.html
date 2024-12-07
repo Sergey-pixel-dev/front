@@ -24,12 +24,10 @@
     <script>
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
-        alert("Пожалуйста, войдите в систему.");
+        showNotification("Пожалуйста, войдите в систему.", "error");
         window.location.href = "index.html";
       }
     </script>
-    <!-- Остальной контент страницы -->
-
     <!-- Navbar Placeholder -->
     <div id="navbar-placeholder"></div>
 
@@ -54,15 +52,56 @@
                 type="text"
                 id="api-key"
                 name="api-key"
-                placeholder="Введите API ключ"
+                placeholder="Ваш API ключ"
+                readonly
               />
             </div>
-            <button type="submit" id="save-api-key-btn">
-              Сохранить API ключ
+            <button type="button" id="copy-api-key-btn">
+              Копировать API ключ
+            </button>
+          </form>
+        </div>
+
+        <!-- Секция для смены пароля -->
+        <div class="account-card">
+          <h2>Сменить пароль</h2>
+          <form id="change-password-form">
+            <div class="form-group">
+              <label for="current-password">Текущий пароль:</label>
+              <input
+                type="password"
+                id="current-password"
+                name="current-password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="new-password">Новый пароль:</label>
+              <input
+                type="password"
+                id="new-password"
+                name="new-password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Подтвердите новый пароль:</label>
+              <input
+                type="password"
+                id="confirm-password"
+                name="confirm-password"
+                required
+              />
+            </div>
+            <button type="submit" id="change-password-btn">
+              Изменить пароль
             </button>
           </form>
         </div>
       </section>
     </div>
+
+    <!-- Контейнер для уведомлений -->
+    <div id="notification-container"></div>
   </body>
 </html>

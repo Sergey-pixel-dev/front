@@ -378,3 +378,61 @@ body.light-theme #navbar .auth-btn {
 body.light-theme #navbar .auth-btn:hover {
   background-color: #d8d8d8;
 }
+#sidebar .sidebar-footer {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 12px;
+  color: #fff;
+}
+body.light-theme #sidebar .sidebar-footer {
+  color: #000;
+}
+
+#notification-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.notification {
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #333;
+  opacity: 0.9;
+  min-width: 200px;
+}
+
+.notification.info {
+  background-color: #2196f3; /* Синий */
+}
+
+.notification.success {
+  background-color: #4caf50; /* Зеленый */
+}
+
+.notification.error {
+  background-color: #f44336; /* Красный */
+}
+
+.notification.dark {
+  color: #fff;
+}
+
+.notification.light {
+  color: #000;
+}
+
+/* Настройка стиля уведомлений в зависимости от темы */
+body.light-theme .notification.dark {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+body.light-theme .notification.light {
+  background-color: #fff;
+  color: #000;
+}
