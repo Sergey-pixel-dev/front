@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <ul>
         <li><a href="index.html" id="home-link">Главная</a></li>
         <li><a href="graphs.html" id="graphs-link">Графики</a></li>
-        <li id="my-account-link" style="display: none;"><a href="#">Мой аккаунт</a></li>
+        <li id="my-account-link" style="display: none;"><a href="account.html">Мой аккаунт</a></li>
         <li><a href="#">Обратная связь</a></li>
       </ul>
     </nav>
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Добавление обработчиков событий для открытия модальных окон
   authBtn.addEventListener("click", () => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const isLoggedIn = localStorage.getItem("accessToken") !== null;
     if (isLoggedIn) {
       logout();
     } else {
@@ -289,21 +289,50 @@ document.addEventListener("DOMContentLoaded", function () {
   // Обработка формы входа
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
+    loginForm.addEventListener("submit", async function (e) {
       e.preventDefault();
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      // Простая логика аутентификации (для демонстрации)
+
       if (email && password) {
-        // Сохранение состояния входа
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userEmail", email);
-        // Обновление интерфейса
-        updateAuthButtons();
-        // Скрытие модального окна
-        hideAuthModal();
-        // Очистка формы
-        loginForm.reset();
+        try {
+          const response = await fetch("http://localhost:8081/user/login/", {
+            method: "POST",
+            credentials: "include", // Включает передачу куки для refresh token
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const accessToken = data.access_token;
+            if (accessToken) {
+              // Сохранение access token
+              localStorage.setItem("accessToken", accessToken);
+              // Сохранение email пользователя
+              localStorage.setItem("userEmail", email);
+              // Обновление интерфейса
+              updateAuthButtons();
+              // Скрытие модального окна
+              hideAuthModal();
+              // Очистка формы
+              loginForm.reset();
+            } else {
+              alert("Ошибка при получении токена доступа.");
+            }
+          } else {
+            const errorData = await response.json();
+            alert(`Ошибка входа: ${errorData.error}`);
+          }
+        } catch (error) {
+          console.error("Ошибка при отправке запроса на вход:", error);
+          alert("Произошла ошибка при попытке входа.");
+        }
       } else {
         alert("Пожалуйста, заполните все поля.");
       }
@@ -313,21 +342,50 @@ document.addEventListener("DOMContentLoaded", function () {
   // Обработка формы регистрации
   const registerForm = document.getElementById("register-form");
   if (registerForm) {
-    registerForm.addEventListener("submit", function (e) {
+    registerForm.addEventListener("submit", async function (e) {
       e.preventDefault();
       const regEmail = document.getElementById("reg-email").value;
       const regPassword = document.getElementById("reg-password").value;
-      // Простая логика регистрации (для демонстрации)
+
       if (regEmail && regPassword) {
-        // Для демонстрации автоматически входит после регистрации
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userEmail", regEmail);
-        // Обновление интерфейса
-        updateAuthButtons();
-        // Скрытие модального окна
-        hideRegisterModal();
-        // Очистка формы
-        registerForm.reset();
+        try {
+          const response = await fetch("http://localhost:8081/user/register/", {
+            method: "POST",
+            credentials: "include", // Включает передачу куки для refresh token
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: regEmail,
+              password: regPassword,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const accessToken = data.access_token;
+            if (accessToken) {
+              // Сохранение access token
+              localStorage.setItem("accessToken", accessToken);
+              // Сохранение email пользователя
+              localStorage.setItem("userEmail", regEmail);
+              // Обновление интерфейса
+              updateAuthButtons();
+              // Скрытие модального окна
+              hideRegisterModal();
+              // Очистка формы
+              registerForm.reset();
+            } else {
+              alert("Ошибка при получении токена доступа.");
+            }
+          } else {
+            const errorData = await response.json();
+            alert(`Ошибка регистрации: ${errorData.error}`);
+          }
+        } catch (error) {
+          console.error("Ошибка при отправке запроса на регистрацию:", error);
+          alert("Произошла ошибка при попытке регистрации.");
+        }
       } else {
         alert("Пожалуйста, заполните все поля.");
       }
@@ -336,7 +394,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Обновление состояния кнопок аутентификации и отображение "Мой аккаунт"
   function updateAuthButtons() {
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const accessToken = localStorage.getItem("accessToken");
+    const isLoggedIn = accessToken !== null;
+
     if (isLoggedIn) {
       authBtn.textContent = "Выйти";
       document.getElementById("my-account-link").style.display = "block";
@@ -348,9 +408,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Функция выхода из аккаунта
   function logout() {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("userEmail");
+    // Дополнительно можно удалить refresh token, отправив запрос на logout, если предусмотрено сервером
     updateAuthButtons();
+    alert("Вы успешно вышли из аккаунта.");
   }
 
   // Инициализация состояния кнопок аутентификации при загрузке страницы

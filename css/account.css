@@ -1,0 +1,105 @@
+/* account.css */
+
+/* Общие стили страницы аккаунта */
+#main-content {
+  margin-left: 0;
+  padding: 20px;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+#account-info {
+  margin-top: 40px;
+}
+
+.account-card {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+body.light-theme .account-card {
+  background-color: #fff;
+  color: #333;
+}
+
+.account-card h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Стили для формы */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 16px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: #2a2a2a;
+  color: white;
+}
+
+body.light-theme .form-group input {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #575757;
+}
+
+body.light-theme button {
+  background-color: #fff;
+  color: #333;
+}
+
+body.light-theme button:hover {
+  background-color: #d8d8d8;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .account-card {
+    width: 80%;
+  }
+
+  .form-group input {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}

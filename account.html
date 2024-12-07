@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Мой аккаунт - Погода в Оренбурге</title>
+    <!-- Общие стили -->
+    <link rel="stylesheet" href="css/common.css" />
+    <!-- Специфичные для страницы стили -->
+    <link rel="stylesheet" href="css/account.css" />
+    <!-- Подключаем библиотеки -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Общие скрипты -->
+    <script src="js/common.js"></script>
+    <!-- Специфичные для страницы скрипты -->
+    <script src="js/account.js"></script>
+  </head>
+  <body>
+    <script>
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        alert("Пожалуйста, войдите в систему.");
+        window.location.href = "index.html";
+      }
+    </script>
+    <!-- Остальной контент страницы -->
+
+    <!-- Navbar Placeholder -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Контент -->
+    <div id="main-content">
+      <header>
+        <h1>Мой аккаунт</h1>
+      </header>
+
+      <!-- Информация о пользователе -->
+      <section id="account-info">
+        <div class="account-card">
+          <h2>Информация о пользователе</h2>
+          <form id="account-form">
+            <div class="form-group">
+              <label for="user-email">Почта:</label>
+              <input type="email" id="user-email" name="email" disabled />
+            </div>
+            <div class="form-group">
+              <label for="api-key">API ключ:</label>
+              <input
+                type="text"
+                id="api-key"
+                name="api-key"
+                placeholder="Введите API ключ"
+              />
+            </div>
+            <button type="submit" id="save-api-key-btn">
+              Сохранить API ключ
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
