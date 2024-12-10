@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // Функция для переключения секции смены пароля
+  // Функция для  пере ключения секции смены пароля
   const toggleChangePasswordBtn = document.getElementById(
     "toggle-change-password-btn"
   );
