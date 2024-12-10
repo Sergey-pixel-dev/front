@@ -16,9 +16,65 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!-- Общие скрипты -->
-    <script src="js/common.js"></script>
+    <script src="js/common.js" defer></script>
     <!-- Специфичные для страницы скрипты -->
-    <script src="js/account.js"></script>
+    <script src="js/account.js" defer></script>
+    <style>
+      /* Добавляем стили для анимации раскрывающегося раздела */
+      .collapsible-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out;
+      }
+
+      .collapsible-content.expanded {
+        max-height: 500px; /* Достаточно большое значение для отображения содержимого */
+        transition: max-height 0.5s ease-in;
+      }
+
+      /* Стили для кнопок */
+      .button-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      /* Стили для значков "глаза" */
+      .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        align-items: center;
+      }
+
+      .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .password-wrapper input {
+        width: 100%;
+        padding-right: 40px; /* Оставляем место для кнопки */
+      }
+
+      /* Убедитесь, что иконки SVG имеют правильный размер */
+      .password-toggle svg {
+        width: 24px;
+        height: 24px;
+        fill: #555;
+      }
+
+      /* Изменение цвета иконки при наведении */
+      .password-toggle:hover svg {
+        fill: #000;
+      }
+    </style>
   </head>
   <body>
     <script>
@@ -56,47 +112,107 @@
                 readonly
               />
             </div>
-            <button type="button" id="copy-api-key-btn">
-              Копировать API ключ
-            </button>
+            <div class="form-group button-group">
+              <button type="button" id="copy-api-key-btn" class="btn">
+                Копировать API ключ
+              </button>
+              <button type="button" id="generate-api-key-btn" class="btn">
+                Сгенерировать API ключ
+              </button>
+            </div>
           </form>
         </div>
 
         <!-- Секция для смены пароля -->
         <div class="account-card">
-          <h2>Сменить пароль</h2>
-          <form id="change-password-form">
-            <div class="form-group">
-              <label for="current-password">Текущий пароль:</label>
-              <input
-                type="password"
-                id="current-password"
-                name="current-password"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="new-password">Новый пароль:</label>
-              <input
-                type="password"
-                id="new-password"
-                name="new-password"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="confirm-password">Подтвердите новый пароль:</label>
-              <input
-                type="password"
-                id="confirm-password"
-                name="confirm-password"
-                required
-              />
-            </div>
-            <button type="submit" id="change-password-btn">
-              Изменить пароль
+          <h2>
+            <button type="button" id="toggle-change-password-btn" class="btn">
+              Сменить пароль
             </button>
-          </form>
+          </h2>
+          <div id="change-password-section" class="collapsible-content">
+            <form id="change-password-form">
+              <div class="form-group password-wrapper">
+                <label for="current-password">Текущий пароль:</label>
+                <input
+                  type="password"
+                  id="current-password"
+                  name="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  data-toggle="current-password"
+                  aria-label="Показать/Скрыть пароль"
+                >
+                  <!-- Иконка глаза (скрыто) -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 
+                    5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 
+                    3-1.346 3-3-1.346-3-3-3z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="form-group password-wrapper">
+                <label for="new-password">Новый пароль:</label>
+                <input
+                  type="password"
+                  id="new-password"
+                  name="new-password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  data-toggle="new-password"
+                  aria-label="Показать/Скрыть пароль"
+                >
+                  <!-- Иконка глаза (скрыто) -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 
+                    12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5 
+                    s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 
+                    0-3 1.346-3 3s1.346 3 3 3 
+                    3-1.346 3-3-1.346-3-3-3z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="form-group password-wrapper">
+                <label for="confirm-password">Подтвердите новый пароль:</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirm-password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  data-toggle="confirm-password"
+                  aria-label="Показать/Скрыть пароль"
+                >
+                  <!-- Иконка глаза (скрыто) -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      d="M12 5c-7.633 0-12 7-12 7s4.367 7 12 7 
+                    12-7 12-7-4.367-7-12-7zm0 12c-2.761 0-5-2.239-5-5 
+                    s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 
+                    0-3 1.346-3 3s1.346 3 3 3 
+                    3-1.346 3-3-1.346-3-3-3z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <button type="submit" id="change-password-btn" class="btn">
+                Изменить пароль
+              </button>
+            </form>
+          </div>
         </div>
       </section>
     </div>

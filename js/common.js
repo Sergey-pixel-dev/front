@@ -316,29 +316,26 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             const accessToken = data.access_token;
             if (accessToken) {
-              // Сохранение access token
               localStorage.setItem("accessToken", accessToken);
-              // Сохранение email пользователя
               localStorage.setItem("userEmail", email);
-              // Обновление интерфейса
               updateAuthButtons();
-              // Скрытие модального окна
               hideAuthModal();
-              // Очистка формы
               loginForm.reset();
-            } else {
-              alert("Ошибка при получении токена доступа.");
+              showNotification("Вы успешно авторизовались.", "success");
             }
           } else {
             const errorData = await response.json();
-            alert(`Ошибка входа: ${errorData.error}`);
+            if (errorData.error == "incorrect password or email") {
+              showNotification("Неправильный пароль или email.", "error");
+            } else {
+              showNotification("Внутренняя ошибка.", "error");
+            }
           }
         } catch (error) {
-          console.error("Ошибка при отправке запроса на вход:", error);
-          alert("Произошла ошибка при попытке входа.");
+          showNotification("Внутренняя ошибка.", "error");
         }
       } else {
-        alert("Пожалуйста, заполните все поля.");
+        showNotification("Пожалуйста, заполните все поля.", "error");
       }
     });
   }
@@ -369,33 +366,29 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             const accessToken = data.access_token;
             if (accessToken) {
-              // Сохранение access token
               localStorage.setItem("accessToken", accessToken);
-              // Сохранение email пользователя
               localStorage.setItem("userEmail", regEmail);
-              // Обновление интерфейса
               updateAuthButtons();
-              // Скрытие модального окна
               hideRegisterModal();
-              // Очистка формы
               registerForm.reset();
-            } else {
-              if (data.error == "already exists") {
-                alert("Уже существует аккаунт с таким email");
-              } else {
-                alert("Ошибка при получении токена доступа.");
-              }
+              showNotification("Вы успешно зарегестрировались.", "success");
             }
           } else {
             const errorData = await response.json();
-            alert(`Ошибка регистрации: ${errorData.error}`);
+            if (errorData.error == "already exists") {
+              showNotification(
+                "Пользователь с таким email уже существует.",
+                "error"
+              );
+            } else {
+              showNotification("Внутренняя ошибка.", "error");
+            }
           }
         } catch (error) {
-          console.error("Ошибка при отправке запроса на регистрацию:", error);
-          alert("Произошла ошибка при попытке регистрации.");
+          showNotification("Внутренняя ошибка.", "error");
         }
       } else {
-        alert("Пожалуйста, заполните все поля.");
+        showNotification("Пожалуйста, заполните все поля.", "error");
       }
     });
   }
@@ -406,10 +399,10 @@ document.addEventListener("DOMContentLoaded", function () {
   function logout() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userEmail");
-    // Дополнительно можно удалить refresh token, отправив запрос на logout, если предусмотрено сервером
+    //ВЖАНООООО Дополнительно можно удалить refresh token, отправив запрос на logout, если предусмотрено сервером
     window.location.href = "index.html";
     updateAuthButtons();
-    //alert("Вы успешно вышли из аккаунта.");
+    showNotification("Вы успешно вышли из аккаунта.", "success");
   }
 
   // Инициализация состояния кнопок аутентификации при загрузке страницы
@@ -441,8 +434,6 @@ function showNotification(message, type = "info") {
     notification.remove();
   }, 5000);
 }
-
-// ... остальной код ...
 
 // Делайте функции показа и скрытия модальных окон глобальными
 window.showAuthModal = function showAuthModal() {
@@ -483,5 +474,4 @@ window.updateAuthButtons = function updateAuthButtons() {
 // Вызовите updateAuthButtons при загрузке страницы
 document.addEventListener("DOMContentLoaded", function () {
   updateAuthButtons();
-  // ... остальной код ...
 });
